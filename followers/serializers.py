@@ -1,32 +1,23 @@
-from rest_framework import generics, permissions
-from drf_api.permissions import IsOwnerOrReadOnly
+from django.db import IntegrityError
+from rest_framework import serializers
 from .models import Follower
-from .serializers import FollowerSerializer
 
 
-class FollowerList(generics.ListCreateAPIView):
+class FollowerSerializer(serializers.ModelSerializer):
     """
-    List all followers, i.e. all instances of a user
-    following another user'.
-    Create a follower, i.e. follow a user if logged in.
-    Perform_create: associate the current logged in user with a follower.
+    Serializer for the Follower model
+    Create method handles the unique constraint on 'owner' and 'followed'
     """
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Follower.objects.all()
-    serializer_class = FollowerSerializer
+    owner = serializers.ReadOnlyField(source="owner.username")
+    followed_name = serializers.ReadOnlyField(source="followed.username")
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    class Meta:
+        model = Follower
+        fields = ["id", "owner", "created_at", "followed", "followed_name"]
 
-
-class FollowerDetail(generics.RetrieveDestroyAPIView):
-    """
-    Retrieve a follower
-    No Update view, as we either follow or unfollow users
-    Destroy a follower, i.e. unfollow someone if owner
-    """
-
-    permission_classes = [IsOwnerOrReadOnly]
-    queryset = Follower.objects.all()
-    serializer_class = FollowerSerializer
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({"detail": "possible duplicate"})
