@@ -1,38 +1,33 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .settings import (
-    JWT_AUTH_COOKIE,
-    JWT_AUTH_REFRESH_COOKIE,
-    JWT_AUTH_SAMESITE,
-    JWT_AUTH_SECURE,
-)
+"""drf_api URL Configuration
 
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from .views import root_route, logout_route
 
-@api_view()
-def root_route(request):
-    return Response({"message": "Welcome to my drf API!"})
-
-
-# dj-rest-auth logout view fix
-@api_view(["POST"])
-def logout_route(request):
-    response = Response()
-    response.set_cookie(
-        key=JWT_AUTH_COOKIE,
-        value="",
-        httponly=True,
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        max_age=0,
-        samesite=JWT_AUTH_SAMESITE,
-        secure=JWT_AUTH_SECURE,
-    )
-    response.set_cookie(
-        key=JWT_AUTH_REFRESH_COOKIE,
-        value="",
-        httponly=True,
-        expires="Thu, 01 Jan 1970 00:00:00 GMT",
-        max_age=0,
-        samesite=JWT_AUTH_SAMESITE,
-        secure=JWT_AUTH_SECURE,
-    )
-    return response
+urlpatterns = [
+    path("", root_route),
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    # The logout route has to be above the default one to be matched first
+    path("dj-rest-auth/logout/", logout_route),
+    path("dj-rest-auth/", include("dj_rest_auth.urls")),
+    path("dj-rest-auth/registration/", include("dj_rest_auth.registration.urls")),
+    path("", include("profiles.urls")),
+    path("", include("posts.urls")),
+    path("", include("comments.urls")),
+    path("", include("likes.urls")),
+    path("", include("followers.urls")),
+]
