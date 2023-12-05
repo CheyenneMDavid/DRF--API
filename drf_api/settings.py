@@ -65,10 +65,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = "DEV" in os.environ
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "ALLOWED_HOST",
+    os.environ.get("ALLOWED_HOST"),
     "localhost",
-    "drf---api-65413badfaf5.herokuapp.com",
 ]
 
 
@@ -119,7 +117,9 @@ if "CLIENT_ORIGIN_DEV" in os.environ:
     ).group(0)
     CORS_ALLOWED_ORIGIN_REGEXES = [
         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+        "CLIENT_ORIGIN_DEV_VSCODE",
     ]
+
 
 CORS_ALLOW_CREDENTIALS = True
 
