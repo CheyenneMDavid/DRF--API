@@ -62,9 +62,23 @@ REST_AUTH_SERIALIZERS = {
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "DEV" in os.environ
+# DEBUG = "DEV" in os.environ
+DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST"), "localhost", ".gitpod.io"]
+ALLOWED_HOSTS = [
+    os.environ.get("ALLOWED_HOST"),
+    "localhost",
+]
+
+if "CLIENT_ORIGIN_DEV" in os.environ:
+    extracted_url = re.match(
+        r"^.+-", os.environ.get("CLIENT_ORIGIN_DEV", ""), re.IGNORECASE
+    ).group(0)
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+    ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -109,20 +123,9 @@ MIDDLEWARE = [
 ]
 
 # Static addition for local development using vscode.
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-
-if "CLIENT_ORIGIN_DEV" in os.environ:
-    extracted_url = re.match(
-        r"^.+-", os.environ.get("CLIENT_ORIGIN_DEV", ""), re.IGNORECASE
-    ).group(0)
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
-    ]
-
-
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
 
 
 ROOT_URLCONF = "drf_api.urls"
