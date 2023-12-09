@@ -9,10 +9,16 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+
+
+import os
+from pathlib import Path
 import re
 
-from pathlib import Path
-import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import dj_database_url
 
 
@@ -68,7 +74,11 @@ DEBUG = "DEV" in os.environ
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST"),
     "localhost",
+    "127.0.0.1",
+    ".gitpod.io",
+    os.environ.get("LOCAL_IP_ENV_VAR"),
 ]
+
 
 if "CLIENT_ORIGIN_DEV" in os.environ:
     extracted_url = re.match(
