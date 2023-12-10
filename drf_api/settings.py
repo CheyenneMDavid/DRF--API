@@ -71,7 +71,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = "DEV" in os.environ
 
 ALLOWED_HOSTS = [
-    "drf---api-65413badfaf5.herokuapp.com",
+    os.environ.get("ALLOWED_HOST"),
     "localhost",
     "127.0.0.1",
     ".gitpod.io",
