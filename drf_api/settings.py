@@ -76,7 +76,6 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     ".gitpod.io",
-    os.environ.get("LOCAL_IP_ENV_VAR"),
 ]
 
 
