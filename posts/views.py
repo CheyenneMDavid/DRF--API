@@ -1,55 +1,49 @@
 from django.db.models import Count
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_api.permissions import IsOwnerOrReadOnly
-from .models import Post
-from .serializers import PostSerializer
+from .models import Profile
+from .serializers import ProfileSerializer
 
 
-class PostList(generics.ListCreateAPIView):
+class ProfileList(generics.ListAPIView):
     """
-    List posts or create a post if logged in
-    The perform_create method associates the post with the logged in user.
+    List all profiles.
+    No create view as profile creation is handled by django signals.
     """
 
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Post.objects.annotate(
-        likes_count=Count("likes", distinct=True),
-        comments_count=Count("comment", distinct=True),
+    queryset = Profile.objects.annotate(
+        posts_count=Count("owner__post", distinct=True),
+        followers_count=Count("owner__followed", distinct=True),
+        following_count=Count("owner__following", distinct=True),
     ).order_by("-created_at")
+    serializer_class = ProfileSerializer
     filter_backends = [
         filters.OrderingFilter,
-        filters.SearchFilter,
         DjangoFilterBackend,
     ]
     filterset_fields = [
+        "owner__following__followed__profile",
         "owner__followed__owner__profile",
-        "likes__owner__profile",
-        "owner__profile",
-    ]
-    search_fields = [
-        "owner__username",
-        "title",
     ]
     ordering_fields = [
-        "likes_count",
-        "comments_count",
-        "likes__created_at",
+        "posts_count",
+        "followers_count",
+        "following_count",
+        "owner__following__created_at",
+        "owner__followed__created_at",
     ]
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
-
-class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+class ProfileDetail(generics.RetrieveUpdateAPIView):
     """
-    Retrieve a post and edit or delete it if you own it.
+    Retrieve or update a profile if you're the owner.
     """
 
-    serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Post.objects.annotate(
-        likes_count=Count("likes", distinct=True),
-        comments_count=Count("comment", distinct=True),
+    queryset = Profile.objects.annotate(
+        posts_count=Count("owner__post", distinct=True),
+        followers_count=Count("owner__followed", distinct=True),
+        following_count=Count("owner__following", distinct=True),
     ).order_by("-created_at")
+    serializer_class = ProfileSerializer
