@@ -74,7 +74,7 @@ DEBUG = "DEV" in os.environ
 
 ALLOWED_HOSTS = [
     # os.environ.get("ALLOWED_HOST"),
-    "https://drf---api-65413badfaf5.herokuapp.com",
+    "drf---api-65413badfaf5.herokuapp.com",
     "localhost",
     "127.0.0.1",
     ".gitpod.io",
