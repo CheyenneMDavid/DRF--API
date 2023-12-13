@@ -15,10 +15,6 @@ import os
 from pathlib import Path
 import re
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 import dj_database_url
 
 
@@ -218,19 +214,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "console": {
-#             "class": "logging.StreamHandler",
-#         },
-#     },
-#     "loggers": {
-#         "django": {
-#             "handlers": ["console"],
-#             "level": "DEBUG",  # Change to 'ERROR' in production
-#             "propagate": True,
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "DEBUG",  # Change to 'ERROR' in production
+            "propagate": True,
+        },
+    },
+}
