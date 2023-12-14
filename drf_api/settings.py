@@ -10,13 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-
 import os
 from pathlib import Path
 import re
 
 import dj_database_url
 
+from dotenv import load_dotenv
+
+print("CLOUDINARY_URL:", os.environ.get("CLOUDINARY_URL"))
 
 if os.path.exists("env.py"):
     import env
@@ -25,6 +27,8 @@ if os.path.exists("env.py"):
 CLOUDINARY_STORAGE = {"CLOUDINARY_URL": os.environ.get("CLOUDINARY_URL")}
 MEDIA_URL = "/media/"
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -214,7 +218,7 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# # xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -226,7 +230,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "DEBUG",  # Change to 'ERROR' in production
+            "level": "DEBUG",
             "propagate": True,
         },
     },
