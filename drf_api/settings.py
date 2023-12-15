@@ -16,7 +16,6 @@ import re
 
 import dj_database_url
 
-from dotenv import load_dotenv
 
 print("CLOUDINARY_URL:", os.environ.get("CLOUDINARY_URL"))
 
