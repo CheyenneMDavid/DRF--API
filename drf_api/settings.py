@@ -131,10 +131,10 @@ if "CLIENT_ORIGIN_DEV" in os.environ:
 CORS_ALLOW_CREDENTIALS = True
 
 
-# Static addition for local development using vscode.
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://momentos-82c8916fc192.herokuapp.com",
+]
 
 
 ROOT_URLCONF = "drf_api.urls"
