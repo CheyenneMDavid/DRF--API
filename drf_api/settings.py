@@ -74,8 +74,8 @@ DEBUG = "DEV" in os.environ
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST"),
     "localhost",
-    "127.0.0.1",
-    ".gitpod.io",
+    # "127.0.0.1",
+    # ".gitpod.io",
 ]
 
 
